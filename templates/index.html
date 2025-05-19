@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Website Summarizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
+      color: #ffffff;
+    }
+
+    #urlInput {
+      width: 60%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      background-color: #2c2c3c;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #10a37f;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #0d8c6d;
+    }
+
+    pre {
+      width: 80%;
+      max-height: 400px;
+      overflow-y: auto;
+      background-color: #2c2c3c;
+      color: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 768px) {
+      #urlInput {
+        width: 90%;
+      }
+
+      pre {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🌐 Website Summerizer</h1>
+  <input type="text" id="urlInput" placeholder="Enter URL">
+  <button onclick="summarize()">Summarize</button>
+  <pre id="result">Your summary will appear here...</pre>
+
+  <script>
+    async function summarize() {
+      const url = document.getElementById('urlInput').value;
+      document.getElementById('result').innerText = 'Summarizing... please wait ⏳';
+
+      try {
+        const res = await fetch('/summarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerText = data.summary || data.error;
+      } catch (error) {
+        document.getElementById('result').innerText = 'Something went wrong: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
